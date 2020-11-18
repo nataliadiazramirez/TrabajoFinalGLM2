@@ -1,0 +1,163 @@
+---
+title: ""
+author: ""
+date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+```
+
+
+Gráfico 1. Potencia de la prueba para coeficientes
+
+```{r}
+
+n<-c(100,1000)
+coeficientes<-seq(1,10,1)
+
+tam1<-matrix(rep(0,length(coeficientes)*n[1]),ncol=1000,nrow = length(coeficientes),byrow = T)
+tam2<-matrix(rep(0,length(coeficientes)*n[2]),ncol=1000,nrow = length(coeficientes),byrow = T)
+
+
+
+for(i in 1:length(n)){
+  for (h in 1:length(coeficientes)) {
+    for (j in 1:1000) {
+      # extraer valor p del coeficiente
+      # p<-hlt$p.value
+      
+      if(i==1){
+        tam1[h,j]<- 1*(p<0.05)
+      }
+      
+      if(i==2){
+        tam2[h,j]<- 1*(p<0.05)
+      }
+      
+      
+    }
+  }
+}
+
+#resumen
+
+mean1<-apply(tam1,1,mean)
+mean2<-apply(tam2,1,mean)
+
+
+df<-data.frame(coeficientes=c(coeficientes,coeficientes),Muestra=c(rep(n[1],length(coeficientes)),rep(n[2],length(coeficientes))),Potencia=c(mean1,mean2))
+
+```
+
+```{r}
+
+ggplot(data = df,aes(coeficientes,Potencia)) + 
+  geom_point()+
+  ylim(0,1)+
+  theme_bw() + 
+  facet_wrap(~Muestra, ncol =2) 
+```
+
+
+
+Gráfico 4. Cantidad de variables seleccionadas según el tamaño del lambda 
+
+
+```{r}
+#con datos
+lambda<-seq(1,3,1)# luego sustituir por los valores de lambda
+
+tam1<-matrix(rep(0,length(lambda)*1),ncol=1,nrow = length(lambda),byrow = T)
+
+for (i in 1:length(lambda)) {
+  # cantidad de variables seleccionadas
+  tam1[i,1]<- cantidad
+}
+
+
+df<-data.frame(lambda=lambda,
+               Cant_Variables=tam1[,1])
+
+```
+
+```{r}
+
+ggplot(data = df,aes(lambda,Cant_Variables)) + 
+  geom_point()+
+  ylim(0,10)+
+  ylab("Cantidad Variables")+
+  theme_bw()
+```
+
+
+
+Gráfico 5. Cantidad de variables seleccionadas con la regresión lasso y con stepwise para una regresión logistica 
+
+
+```{r}
+#con datos
+Metodo<-c("lasso","stepwise")
+
+tam1<-matrix(rep(0,length(Metodo)*1),ncol=1,nrow = length(Metodo),byrow = T)
+
+#el for se puede quitar
+for (i in 1:length(Metodo)) {
+  # cantidad de variables seleccionadas
+  tam1[i,1]<- cantidad
+}
+
+
+df<-data.frame(Metodo=Metodo,
+               Cant_Variables=tam1[,1])
+
+```
+
+```{r}
+
+ggplot(data = df,aes(Metodo,Cant_Variables)) + 
+  geom_point()+
+  ylim(0,10)+
+  xlab("método")+
+  ylab("Cantidad Variables Seleccionadas")+
+  theme_bw()
+```
+
+
+
+
+Gráfico 6. Error cuadrático medio para la regresión lasso y la regresión logística 
+
+
+```{r}
+Metodo<-c("lasso","logística")
+
+tam1<-matrix(rep(0,length(Metodo)*1),ncol=1,nrow = length(Metodo),byrow = T)
+
+
+#el for se puede quitar
+for (i in 1:length(Metodo)) {
+  # calcular el error cuadratico medio para cada modelo 
+  tam1[i,1]<- cantidad
+}
+
+
+df<-data.frame(Metodo=Metodo,
+               MSE=tam1[,1])
+
+```
+
+```{r}
+
+ggplot(data = df,aes(Metodo,MSE)) + 
+  geom_point()+
+  ylim(0,5)+
+  xlab("método")+
+  ylab("MSE")+
+  theme_bw()
+```
+
+
