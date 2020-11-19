@@ -308,9 +308,46 @@ ggplot(data = df,aes(coeficientes,Potencia)) +
 
 #2. Histogramas de estimacion de coeficientes
 
+#coef significativo
+#n=50
+#lasso
+hist(tam1_es[,2],xlab = "",xlim = c(-0.7,2))
 
-hist(tam1_es[,2])
-hist(tam1_es_log[,2])
+hist(tam1_es_log[-676,2],xlab = "")
+
+
+#n=100
+#lasso
+hist(tam2_es[,2],xlab = "",xlim = c(-0.7,2))
+
+hist(tam2_es_log[,2],xlab = "")
+
+#n=1000
+#lasso
+hist(tam3_es[,2],xlab = "",xlim = c(-0.7,2))
+
+hist(tam3_es_log[,2],xlab = "",xlim = c(-0.7,2))
+
+
+#coef no significativo
+#n=50
+#lasso
+hist(tam1_es[,5],xlab = "",ylim = c(0,700))
+
+hist(tam1_es_log[-c(676),5],xlab = "",ylim = c(0,700))
+
+#n=100
+#lasso
+hist(tam2_es[,5],xlab = "",ylim = c(0,700))
+
+hist(tam2_es_log[,5],xlab = "",ylim = c(0,700))
+
+#n=1000
+#lasso
+hist(tam3_es[,5],xlab = "",ylim = c(0,700))
+
+hist(tam3_es_log[,5],xlab = "",ylim = c(0,700))
+
 
 
 
@@ -319,7 +356,6 @@ hist(tam1_es_log[,2])
 
 
 #3. Análisis de residuos de deviancia (linealidad y normalidad)
-
 
 x<-model.matrix(pobre~.,hogar)
 sal.cv<-cv.glmnet(x[,-1],hogar$pobre,alpha=1, family = binomial)
